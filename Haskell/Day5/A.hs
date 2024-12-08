@@ -12,7 +12,6 @@ splitWith pred [] = []
 splitWith pred xs = let (x, ys) = span pred xs
                     in x : splitWith pred (drop 1 ys)
 
---toInput :: [String] -> ([(Int, [Int])], [[Int]])
 toInput :: [[Char]] -> ([(Int, Int)], [[Int]])
 toInput input = 
   let parts        = splitWith (not . null) input

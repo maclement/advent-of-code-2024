@@ -4,20 +4,26 @@ import Data.Bifunctor (first, second)
 import Control.Monad.State.Lazy (gets, modify, evalState, execState, State)
 import Data.List (nub)
 
-main1, main2 :: IO ()
-main1 = readFile "./input.txt" >>= print . solve1 . toGrid . lines
-main2 = readFile "./input.txt" >>= print . solve2 . toGrid . lines
 
 type Coordinate = (Int, Int)
 type Grid = M.Map Coordinate Char
 
-data Info = Info { curPos :: Coordinate, curDir :: Direction, grid :: Grid, visited :: [(Coordinate, Direction)] }
-
 data Direction = North | East | South | West
   deriving Eq
 
+main1, main2 :: IO ()
+main1 = readFile "./input.txt" >>= print . solve1 . toGrid . lines
+main2 = readFile "./input.txt" >>= print . solve2 . toGrid . lines
+
+toGrid :: [String] -> Grid
+toGrid input = M.fromList
+  [ ((y, x), char) | (y, row ) <- zip [0..] input, (x, char) <- zip [0..] row ]
+
+
+data Info = Info { curPos :: Coordinate, curDir :: Direction, grid :: Grid, visited :: [(Coordinate, Direction)] }
+
 -- | Translates direction to step function
-move :: Direction -> (Coordinate -> Coordinate)
+move :: Direction -> Coordinate -> Coordinate
 move = \case
   North -> first pred
   East  -> second succ
@@ -34,10 +40,6 @@ rotate = \case
 
 updateInfo :: Coordinate -> Direction -> Info -> Info
 updateInfo newPos dir (Info p d g v) = Info newPos d g ((newPos, dir) : v)
-
-toGrid :: [String] -> Grid
-toGrid input = M.fromList
-  [ ((y, x), char) | (y, row ) <- zip [0..] input, (x, char) <- zip [0..] row ]
 
 solve1 :: Grid -> Int 
 solve1 g = let (startPos, c) = head $ M.toList $ M.filter (\x -> x /= '.' && x /= '#') g
