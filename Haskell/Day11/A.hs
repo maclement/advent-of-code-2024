@@ -19,15 +19,15 @@ iterateNTimes n iterations = do
     case m of
       Just i                       -> return i
       _ | n == 0                   -> do
-          res <- iterateNTimes 1 (iterations - 1) 
-          modify (M.insert (n, iterations) res)
-          return res
+            res <- iterateNTimes 1 (iterations - 1) 
+            modify (M.insert (n, iterations) res)
+            return res
         | even . length . show $ n -> do 
-          let n1 = read $ take (length (show n) `div` 2) (show n) 
-          let n2 = read $ drop (length (show n) `div` 2) (show n)
-          res <- (+) <$> iterateNTimes n1 (iterations - 1) <*> iterateNTimes n2 (iterations - 1)
-          modify (M.insert (n, iterations) res)
-          return res
+            let n1 = read $ take (length (show n) `div` 2) (show n) 
+            let n2 = read $ drop (length (show n) `div` 2) (show n)
+            res <- (+) <$> iterateNTimes n1 (iterations - 1) <*> iterateNTimes n2 (iterations - 1)
+            modify (M.insert (n, iterations) res)
+            return res
         | otherwise                -> do 
             res <- iterateNTimes (2024 * n) (iterations - 1)
             modify (M.insert (n, iterations) res)
