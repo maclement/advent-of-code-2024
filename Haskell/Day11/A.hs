@@ -8,9 +8,7 @@ main1 = readFile "./input.txt"  >>= print . solve' 25 . map read . words . head 
 main2 = readFile "./input.txt"  >>= print . solve' 75 . map read . words . head . lines
 
 solve' :: Int -> [Int] -> Int
-solve' i input = let x = mapM (flip iterateNTimes i) input
-                     (a, b) = runState x M.empty
-                 in sum a
+solve' i input = sum $ execState (mapM (flip iterateNTimes i) input) M.empty
 
 -- | Iterates the rules a given amount of times and collects the resulting sum of elements.
 -- | Stores results in a map. Haskell is my favorite imperative programming language (:
