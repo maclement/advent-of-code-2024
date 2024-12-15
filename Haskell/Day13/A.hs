@@ -6,7 +6,6 @@ import Text.Parsec.Char (string, digit)
 import Data.Bifunctor (bimap)
 import GHC.Float.RealFracMethods (roundDoubleInteger)
 
-
 type Button = (Integer, Integer)
 
 main1, main2 :: IO ()
