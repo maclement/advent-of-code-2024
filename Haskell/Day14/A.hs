@@ -48,7 +48,7 @@ main1 :: IO ()
 main1 = parseFromFile (many1 robot) "./input.txt" >>= print . either show (show . solve)
 
 solve :: [Robot 101 103] -> Int
-solve r = product $ map length $ splitQuadrants $ [step a r' | a <- [100], r' <- r] 
+solve r = product $ map length $ splitQuadrants $ map (step 100) r 
 
 splitQuadrants :: (KnownNat w, KnownNat h) => [Robot w h] -> [[Robot w h]]
 splitQuadrants rs = let (left, right) = splitVertical rs
