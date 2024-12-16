@@ -24,7 +24,6 @@ findPaths :: Grid -> Coordinate -> Set Coordinate
 findPaths g c | g M.!? c == Just 9 = S.singleton c
               | otherwise          = foldr S.union S.empty $ [ findPaths g n | n <- neighborhood c, isJust $ g M.!? n, (g M.! c) + 1 == g M.! n]
 
-
 neighborhood :: Coordinate -> [Coordinate]
 neighborhood p = [ first succ p, second succ p, first pred p, second pred p ]
 

@@ -11,7 +11,7 @@ solve' :: Int -> [Int] -> Int
 solve' i input = sum $ execState (mapM (flip iterateNTimes i) input) M.empty
 
 -- | Iterates the rules a given amount of times and collects the resulting sum of elements.
--- | Stores results in a map. Haskell is my favorite imperative programming language (:
+--   Stores results in a map. Haskell is my favorite imperative programming language (:
 iterateNTimes :: Int -> Int -> State (Map (Int, Int) Int) Int
 iterateNTimes n 0          = modify (M.insert (n, 0) 1) >> return 1
 iterateNTimes n iterations = do
