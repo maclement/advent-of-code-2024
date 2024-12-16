@@ -26,10 +26,6 @@ instance (Num a, Num b) => Num (a, b) where
   (x1, y1) * (x2, y2) = (x1 * x2, y1 * y2)
   fromInteger n = (fromInteger n, fromInteger n)
 
-instance (KnownNat n) => Bounded (Z n) where
-  minBound = 0
-  maxBound = fromInteger $ natVal (Proxy @n)
-
 step :: (KnownNat w, KnownNat h) => Integer -> Robot w h -> Robot w h
 step n r = r{pos = pos r + fromInteger n * vel r}
 
@@ -70,6 +66,12 @@ splitHorizontal = second (dropWhile $ \r -> unZn (snd (pos r)) == (natVal (Proxy
   . span (\r -> unZn (snd (pos r)) < (natVal (Proxy @h) `div` 2)) 
   . sortBy (compare `on` snd . pos)
 
+findElem :: (Integer, Integer) -> [Robot w h] -> String
+findElem p r  = let l = length [ () | r' <- r, bimap unZn unZn (pos r') == p] in if l == 0 then "." else show l
+
+printBoard :: [Robot 101 103] -> IO ()
+printBoard r = mapM_ print [ concat [ x | w <- [0..100], let x = findElem (w, h) r ] | h <- [0..102]]
+
 main2:: IO ()
 main2 = do
   ea <- parseFromFile (many1 robot) "./input.txt"
@@ -80,9 +82,3 @@ main2 = do
       let (lowestScore, iteration, _) = minimumBy (compare `on` (\(_,_,z) -> z)) sols 
       printBoard lowestScore
       print $ "The correct iteration is: " ++ show iteration
-
-findElem :: (Integer, Integer) -> [Robot w h] -> String
-findElem p r  = let l = length [ () | r' <- r, bimap unZn unZn (pos r') == p] in if l == 0 then "." else show l
-
-printBoard :: [Robot 101 103] -> IO ()
-printBoard r = mapM_ print [ concat [ x | w <- [0..100], let x = findElem (w, h) r ] | h <- [0..102]]
